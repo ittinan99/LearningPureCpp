@@ -27,6 +27,16 @@ int main()
 			return a.Size > b.Size; 
 		};
 
+	auto DetectWormPredicate = [](const Apple& a)
+		{
+			return a.Worm > 0;
+		};
+
+	auto SortByWormPredicate = [DetectWormPredicate](const Apple& a, const Apple& b)
+		{
+			return DetectWormPredicate(a) and DetectWormPredicate(b);
+		};
+
 	for (int Round = 0 ;Round < Apples.size() ; Round++)
 	{
 		for (int AppleIdx = 0; AppleIdx < Apples.size(); AppleIdx++)
@@ -46,11 +56,11 @@ int main()
 
 	for (int Round = 0; Round < Apples.size(); Round++)
 	{
-		if (Apples[Round].Worm > 0)
+		if(DetectWormPredicate(Apples[Round]) == true)
 		{
 			for (int AppleIdx = Round; AppleIdx < Apples.size(); 1 + AppleIdx++)
 			{
-				if (Apples[AppleIdx].Worm == 0)
+				if (SortByWormPredicate(Apples[AppleIdx], Apples[Round]) == false)
 				{
 					swap(Apples[AppleIdx], Apples[Round]);
 					break;
